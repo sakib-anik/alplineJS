@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        /* Your existing CSS styles */
+        body {
+            color: #000000;
+            background-color: #FFFFFF;
+            font-size: 14px;
+            font-family: 'Helvetica', arial, sans-serif;
+            margin: 0px;
+            -webkit-print-color-adjust: exact;
+        }
+
+        table.voucher {
+            display: inline-block;
+            border: 2px solid black;
+            margin: 2px;
+        }
+
+        @page {
+            size: auto;
+            margin-left: 7mm;
+            margin-right: 3mm;
+            margin-top: 9mm;
+            margin-bottom: 3mm;
+        }
+
+        @media print {
+            table {
+                page-break-after: auto;
+            }
+
+            tr {
+                page-break-inside: avoid;
+                page-break-after: auto;
+            }
+
+            td {
+                page-break-inside: avoid;
+                page-break-after: auto;
+            }
+
+            thead {
+                display: table-header-group;
+            }
+
+            tfoot {
+                display: table-footer-group;
+            }
+        }
+
+        #num {
+            float: right;
+            display: inline-block;
+        }
+
+        .qrc {
+            width: 30px;
+            height: 30px;
+            margin-top: 1px;
+        }
+    </style>
+  </head>
+  <body>
+    <!-- Initialize Alpine.js with an array of vouchers -->
+    <div x-data="{
+        vouchers: Array.from({ length: 10 }, (v, i) => ({
+            profile: 'PREVIEW',
+            id: i,
+            code: 'VC' + String(Math.floor(1000 + Math.random() * 9000)),  // Generate random 4-digit number
+            price: '10.00',
+            time_limit: '60',
+            validity: '360'
+        }))
+    }">
+      <!-- Loop through the vouchers and create a table for each -->
+      <template x-for="voucher in vouchers" :key="voucher.id">
+        <table class="voucher" style=" width: 160px;">
+          <tbody>
+            <tr style="background-color: black;">
+              <td
+                style="text-align: left; font-size: 14px; font-weight:bold;color: white;">
+                <span x-text="voucher.profile"></span>
+                <span x-text="voucher.id" id="num"></span>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <table style=" text-align: center; width: 150px;">
+                  <tbody>
+                    <tr style="color: black; font-size: 11px;">
+                      <td>
+                        <table style="width:100%;">
+                          <tr>
+                            <td>VOUCHER CODE</td>
+                          </tr>
+                          <tr style="color: black; font-size: 14px;">
+                            <td
+                              style="width:100%; border: 1px solid black; font-weight:bold;">
+                              <span x-text="voucher.code"></span>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td colspan="2"
+                              style="border: 1px solid black; font-weight:bold;">
+                              Price <span x-text="voucher.price"></span>
+                            </td>
+                          </tr>
+                          <tr x-show="voucher.time_limit">
+                            <td colspan="2"
+                              style="border: 1px solid black; font-weight:bold;">
+                              Time Limit: <span
+                                x-text="voucher.time_limit"></span>
+                            </td>
+                          </tr>
+                          <tr x-show="voucher.validity">
+                            <td colspan="2"
+                              style="border: 1px solid black; font-weight:bold;">
+                              Validity: <span x-text="voucher.validity"></span>
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </template>
+    </div>
+
+    <!-- Alpine.js (Load from CDN) -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  </body>
+</html>
